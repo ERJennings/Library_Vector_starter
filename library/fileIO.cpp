@@ -1,4 +1,12 @@
 #include "../includes_usr/fileIO.h"
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <list>
+#include <stdlib.h>
+#include <ctype.h>
 using namespace std;
 /* clears, then loads books from the file filename
  * returns  COULD_NOT_OPEN_FILE if cannot open filename
@@ -7,6 +15,19 @@ using namespace std;
  * */
 int loadBooks(std::vector<book> &books, const char* filename)
 {
+	books.clear();
+
+	ifstream myfile;
+	myfile.open(filename);
+	if(!myfile.is_open()) {
+		return COULD_NOT_OPEN_FILE;
+	}
+	else if (myfile.peek() == std::ifstream::traits_type::eof()) {
+		return NO_BOOKS_IN_LIBRARY;
+	}
+	else {
+
+	}
 	return SUCCESS;
 }
 
