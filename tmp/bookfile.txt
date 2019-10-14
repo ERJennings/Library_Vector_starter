@@ -3,7 +3,7 @@
 2, "The Stray Shopping Carts of Eastern North America","author2",2,1
 3, "Extreme Ironing","Phil Shaw",2,1
 4,"Why Cats Paint","Heather Busch",2,1
-5, "Pets with Tourette’s","Mark Leigh",2,1
+5, "Pets with Tourette’s","Mark Leigh",1,-2
 6,"Old Tractors and the Men Who Love Them","Roger Welsch",1,-2
 7,"Be Bold With Bananas","Crescent Books",1,-2
 8,"Bombproof Your Horse","Rick Pelicano",1,-2

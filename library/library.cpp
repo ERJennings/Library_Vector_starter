@@ -76,7 +76,7 @@ int checkout(int bookid, int patronid){
 
 	allBooks[bookid].loaned_to_patron_id = patronid;
 	allBooks[bookid].state = OUT;
-	allPatrons[patronid].number_books_checked_out = allPatrons[patronid].number_books_checked_out - 1;
+	allPatrons[patronid].number_books_checked_out = allPatrons[patronid].number_books_checked_out + 1;
 
 	savePatrons(allPatrons,PATRONFILE.c_str());
 	saveBooks(allBooks,BOOKFILE.c_str());
