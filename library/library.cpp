@@ -13,12 +13,18 @@ using namespace std;
 //NOTE: also make sure you save patron and book data to disk any time you make a change to them
 //NOTE: for files where data is stored see constants.h BOOKFILE and PATRONFILE
 
+vector<book> allBooks;
+vector<patron> allPatrons;
+
 /*
  * clear books and patrons containers
  * then reload them from disk 
  */
 void reloadAllData(){
-
+	allBooks.clear();
+	allPatrons.clear();
+	loadBooks(allBooks,BOOKFILE.c_str());
+	loadPatrons(allPatrons,PATRONFILE.c_str());
 }
 
 /* checkout a book to a patron
@@ -42,6 +48,35 @@ void reloadAllData(){
  *         TOO_MANY_OUT patron has the max number of books allowed checked out
  */
 int checkout(int bookid, int patronid){
+	reloadAllData();
+
+	bool patronExists = false;
+	for (int var = 0; var < allPatrons.size(); ++var) {
+		if (allPatrons[var].patron_id == patronid) {
+			patronExists = true;
+		}
+	}
+	if (patronExists == false) {
+		return PATRON_NOT_ENROLLED;
+	}
+
+	bool bookExists = false;
+	for (int var = 0; var < allBooks.size(); ++var) {
+		if (allBooks[var].book_id == bookid) {
+			bookExists = true;
+		}
+	}
+	if (bookExists == false) {
+		return BOOK_NOT_IN_COLLECTION;
+	}
+
+	if (allPatrons[patronid].number_books_checked_out >= MAX_BOOKS_ALLOWED_OUT) {
+		return TOO_MANY_OUT;
+	}
+
+	allBooks[bookid].loaned_to_patron_id = patronid;
+	allBooks[bookid].state = OUT;
+
 	return SUCCESS;
 }
 
@@ -80,7 +115,8 @@ int enroll(std::string &name){
  * 
  */
 int numbBooks(){
-	return 0;
+	reloadAllData();
+	return allBooks.size();
 }
 
 /*
@@ -88,7 +124,8 @@ int numbBooks(){
  * (ie. if 3 patrons returns 3)
  */
 int numbPatrons(){
-	return 0;
+	reloadAllData();
+	return allPatrons.size();
 }
 
 /*the number of books patron has checked out
