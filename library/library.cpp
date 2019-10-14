@@ -76,6 +76,10 @@ int checkout(int bookid, int patronid){
 
 	allBooks[bookid].loaned_to_patron_id = patronid;
 	allBooks[bookid].state = OUT;
+	allPatrons[patronid].number_books_checked_out = allPatrons[patronid].number_books_checked_out - 1;
+
+	savePatrons(allPatrons,PATRONFILE.c_str());
+	saveBooks(allBooks,BOOKFILE.c_str());
 
 	return SUCCESS;
 }
@@ -106,7 +110,16 @@ int checkin(int bookid){
  *    the patron_id of the person added
  */
 int enroll(std::string &name){
-	return 0;
+	reloadAllData();
+	patron newPatron;
+	newPatron.name = name;
+	newPatron.number_books_checked_out = 0;
+	newPatron.patron_id = allPatrons.size();
+	allPatrons.push_back(newPatron);
+
+	savePatrons(allPatrons,PATRONFILE.c_str());
+
+	return allPatrons.size() - 1;
 }
 
 /*
@@ -134,7 +147,17 @@ int numbPatrons(){
  *        or PATRON_NOT_ENROLLED         
  */
 int howmanybooksdoesPatronHaveCheckedOut(int patronid){
-	return 0;
+	reloadAllData();
+	bool patronExists = false;
+	for (int var = 0; var < allPatrons.size(); ++var) {
+		if (allPatrons[var].patron_id == patronid) {
+			patronExists = true;
+		}
+	}
+	if (patronExists == false) {
+		return PATRON_NOT_ENROLLED;
+	}
+	return allPatrons[patronid].number_books_checked_out;
 }
 
 /* search through patrons container to see if patronid is there
@@ -144,6 +167,17 @@ int howmanybooksdoesPatronHaveCheckedOut(int patronid){
  *         PATRON_NOT_ENROLLED no patron with this patronid
  */
 int whatIsPatronName(std::string &name,int patronid){
+	reloadAllData();
+		bool patronExists = false;
+		for (int var = 0; var < allPatrons.size(); ++var) {
+			if (allPatrons[var].patron_id == patronid) {
+				patronExists = true;
+			}
+		}
+		if (patronExists == false) {
+			return PATRON_NOT_ENROLLED;
+		}
+	//return allPatrons[patronid].name;
 	return SUCCESS;
 }
 
