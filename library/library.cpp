@@ -97,6 +97,25 @@ int checkout(int bookid, int patronid){
  * 		   BOOK_NOT_IN_COLLECTION
  */
 int checkin(int bookid){
+	reloadAllData();
+
+	bool bookExists = false;
+	for (int var = 0; var < allBooks.size(); ++var) {
+		if (allBooks[var].book_id == bookid) {
+			bookExists = true;
+		}
+	}
+	if (bookExists == false) {
+		return BOOK_NOT_IN_COLLECTION;
+	}
+
+	allPatrons[allBooks[bookid].loaned_to_patron_id].number_books_checked_out = allPatrons[allBooks[bookid].loaned_to_patron_id].number_books_checked_out - 1;
+	allBooks[bookid].loaned_to_patron_id = NO_ONE;
+	allBooks[bookid].state = IN;
+
+	savePatrons(allPatrons,PATRONFILE.c_str());
+	saveBooks(allBooks,BOOKFILE.c_str());
+
 	return SUCCESS;
 }
 
